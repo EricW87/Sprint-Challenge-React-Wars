@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import PersonCard from "./PersonCard.js";
+import styled from 'styled-components'
 
 export default function PersonList() {
     const [people, setPeople] = useState([]);
@@ -18,8 +19,18 @@ export default function PersonList() {
             });
     }, []);
 
+    const ContainerDiv = styled.div`
+        margin: 0 auto;
+        width: 75%;
+        display: flex;
+        flex-direction: horizontal;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    `;
+
     return (
-        <div className="people-container">
+        <ContainerDiv>
             {people.length > 0 && people.map((person, id) => {
                 return (
                     <PersonCard 
@@ -32,6 +43,6 @@ export default function PersonList() {
                         />
                 );
                 })}
-        </div>
+        </ContainerDiv>
     )
 }
