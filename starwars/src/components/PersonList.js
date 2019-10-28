@@ -5,19 +5,30 @@ import styled from 'styled-components'
 
 export default function PersonList() {
     const [people, setPeople] = useState([]);
-    console.log(people);
+    const [newURL, setNewURL] = useState('https://swapi.co/api/people');
+    const [next, setNext] = useState();
+    const [prev, setPrev] = useState();
+
     useEffect(() => {
         axios
-            .get(`https://swapi.co/api/people`)
+            .get(newURL)
             .then(response => {
                 setPeople(response.data.results);
-                console.log(response.data);
-                
+                setNext(response.data.next);
+                setPrev(response.data.previous);          
             })
             .catch(err => {
                 console.log(`Error: ${err}`);
             });
-    }, []);
+    }, [newURL]);
+
+    function buttonHandler(type) {
+        if(type === 'previous' && prev)
+            setNewURL(prev);
+        else if(type === 'next' && next)
+            setNewURL(next);
+    };
+
 
     const ContainerDiv = styled.div`
         margin: 0 auto;
@@ -29,8 +40,15 @@ export default function PersonList() {
         justify-content: space-around;
     `;
 
+    const Button = styled.button`
+        width: 100px;
+        margin: 0 20% 20px 20%;
+    `;
+
     return (
         <ContainerDiv>
+            <Button onClick={ () => buttonHandler("previous")}>Previous</Button>
+            <Button onClick={ () => buttonHandler("next")}>Next</Button>
             {people.length > 0 && people.map((person, id) => {
                 return (
                     <PersonCard 
@@ -44,5 +62,5 @@ export default function PersonList() {
                 );
                 })}
         </ContainerDiv>
-    )
+    );
 }
